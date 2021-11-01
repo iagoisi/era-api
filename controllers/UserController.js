@@ -16,7 +16,8 @@ class UserController {
 
   // GET /:id
   show(req, res, next) {
-    User.findById(req.params.id).populate({ path: "loja" })
+    User.findById(req.params.id)
+    .populate({ path: "loja" })
     .then(user => {
       if(!user) return res.status(401).json({ errors: "Usuário não resgistrado" });
       return res.json({
@@ -36,6 +37,8 @@ class UserController {
     const { nome, email, password, loja } = req.body;
 
     if( !nome || !email || !password || !loja ) return res.status(422).json({ errors: "Preencha todos os campos de cadastro" });
+
+    
 
     const user = new User({ nome, email, loja });
     user.setSenha(password)
@@ -63,7 +66,7 @@ class UserController {
 
   // DELETE /
   remove(req, res, next) {
-    User.findById(req,payload.id).then(user => {
+    User.findById(req.payload.id).then(user => {
       if(!user) return res.status(401).json({ errors: "Usuário não registrado" });
       return user.remove().then(() => {
         return res.json({ deleted: true });
@@ -90,20 +93,21 @@ class UserController {
 
   // GET /recuperar-senha
   showRecovery(req, res, next) {
-    return res.render("recovery", { error: null, sucess: null });
+    return res.render("recovery", { error: null, success: null });
   }
 
   // POST /recuperar-senha
   createRecovery(req, res, next) {
     const { email } = req.body;
-    if(!email) return res.render("recovery", { errors: "Preencha com seu e-mail", sucess: null });
+    if(!email) return res.render("recovery", { errors: "Preencha com seu e-mail", success: null });
 
     User.findOne({ email }).then((user) => {
-      if(!user) return res.render("recovery", { error: "Não existe usuário com esse e-mail", sucess: null })
+      if(!user) return res.render("recovery", { error: "Não existe usuário com esse e-mail", success: null });
       const recoveryData = user.criarTokenRecuperacaoSenha();
-      return usuario.save().then(() => {
-        sendEmailRecovery({ user, recovery: recoveryData }, ( error = null, sucess = null ));
-          return res.render("recovery", { error: null, sucess: true });
+      return user.save().then(() => {
+        sendEmailRecovery({ user, recovery: recoveryData }, (error = null, success = null) => {
+            return res.render("recovery", { error, success });
+          });
       }).catch(next);
     }).catch(next);
 
@@ -114,7 +118,7 @@ class UserController {
     if(!req.query.token) return res.render("recovery", { error: "Token não identificado", sucess: null });
     User.findOne({ "recovery.token": req.query.token }).then(user => {
       if(!user) return res.render("recovery", { error: "Não existe usuário com este token", sucess: null });
-      if( new Date(user.recovery.date) < new Date() ) return res.render("recovery", { error: "Token expirado, tente novamente" });
+      if( new Date(user.recovery.date) < new Date() ) return res.render("recovery", { error: "Token expirado, tente novamente", sucess: null });
       return res.render("recovery/store", { error: null, sucess: null, token: req.query.token });
     }).catch(next);
   }

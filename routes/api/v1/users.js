@@ -6,8 +6,8 @@ const userController = new UserController();
 
 router.post("/login", userController.login); // testado
 router.post("/register", userController.store); // testado
-router.put("/", auth.requered, userController.update); 
-router.delete("/", auth.requered, userController.remove);
+router.put("/", auth.requered, userController.update); // testado
+router.delete("/", auth.requered, userController.remove); // testado
 
 
 router.get("/recuperar-senha", userController.showRecovery);
@@ -16,6 +16,6 @@ router.get("/senha-recuperada", userController.showCompleteRecovery);
 router.post("/senha-recuperada", userController.showCompleteRecovery);
 
 router.get("/", auth.requered, userController.index); //testado
-router.get("/:id", auth.requered, userController.show);
+router.get("/:id", auth.requered, userController.show); // testado
 
 module.exports = router;
