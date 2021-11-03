@@ -9,7 +9,7 @@ function getTokenFromHeader(req) {
 }
 
 const auth = {
-  requered: jwt({
+  required: jwt({
     secret,
     userProperty: 'payload',
     algorithms: ["HS256"],

@@ -70,7 +70,7 @@ UserSchema.methods.sendAuthJSON = function() {
     nome: this.nome,
     email: this.email,
     loja: this.loja,
-    role: this.permission,
+    role: this.permissao,
     token: this.gerarToken()
   };
 };
