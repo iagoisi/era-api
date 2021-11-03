@@ -54,10 +54,10 @@ app.use((req, res, next) => {
 });
 
 // ROTA 422, 500, 401
-app.use((req, res, next) => {
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
   if(err.status !== 400) console.warn("Error: ", err.message, new Date());
-  res.json({ errors: { message: err.message, status: err.status }});
+  res.json(err);
 });
 
 

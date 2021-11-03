@@ -36,10 +36,6 @@ class UserController {
   store(req, res, next) {
     const { nome, email, password, loja } = req.body;
 
-    if( !nome || !email || !password || !loja ) return res.status(422).json({ errors: "Preencha todos os campos de cadastro" });
-
-    
-
     const user = new User({ nome, email, loja });
     user.setSenha(password)
 
@@ -78,8 +74,6 @@ class UserController {
   // POST /login
   login(req, res, next) {
     const { email, password } = req.body;
-    if(!email) return res.status(422).json({ errors: { email: "Não pode ficar vazio" } });
-    if(!password) return res.status(422).json({ errors: { password: "Não pode ficar vazio" } });
     User.findOne({ email }).then((user) => {
       if(!user) return res.status(401).json({ errors: "Usuário não registrado" });
       if(!user.validarSenha(password)) return res.status(401).json({ errors: "Senha invalida" });
@@ -115,11 +109,11 @@ class UserController {
 
   // GET /senha-recuperada
   showCompleteRecovery(req, res, next) {
-    if(!req.query.token) return res.render("recovery", { error: "Token não identificado", sucess: null });
+    if(!req.query.token) return res.render("recovery", { error: "Token não identificado", success: null });
     User.findOne({ "recovery.token": req.query.token }).then(user => {
-      if(!user) return res.render("recovery", { error: "Não existe usuário com este token", sucess: null });
-      if( new Date(user.recovery.date) < new Date() ) return res.render("recovery", { error: "Token expirado, tente novamente", sucess: null });
-      return res.render("recovery/store", { error: null, sucess: null, token: req.query.token });
+      if(!user) return res.render("recovery", { error: "Não existe usuário com este token", success: null });
+      if( new Date(user.recovery.date) < new Date() ) return res.render("recovery", { error: "Token expirado, tente novamente", success: null });
+      return res.render("recovery/store", { error: null, success: null, token: req.query.token });
     }).catch(next);
   }
 

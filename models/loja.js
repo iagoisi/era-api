@@ -15,10 +15,10 @@ const LojaSchema = mongoose.Schema({
       numero: { type: String, required: true },
       complemento: { type: String },
       cidade: { type: String, required: true },
-      CEP: { type: String, required: true },
+      CEP: { type: String, required: true }
     },
     required: true
-    
+
     }
   },{ timestamps: true });
 
