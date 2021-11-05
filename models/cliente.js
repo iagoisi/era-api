@@ -1,6 +1,6 @@
 const { string } = require("joi");
 const mongoose = require("mongoose");
-const mongoosePaginate = requeri("mongoose-paginate");
+const mongoosePaginate = require("mongoose-paginate");
 const Schema = mongoose.Schema;
 
 const ClienteSchema = Schema({

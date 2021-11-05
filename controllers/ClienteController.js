@@ -24,7 +24,7 @@ class ClienteController {
       const limit = Number(req.query.limit) || 30;
       const clientes = await Cliente.paginate(
         { loja: req.query.loja },
-        { offset, limit, populate: "usuario" }
+        { offset, limit, populate: "user" }
       );
       return res.send({ clientes });
     } catch(e){
@@ -38,14 +38,14 @@ class ClienteController {
   }
 
   // GET /search
-  search(req, res, next) {
+  async search(req, res, next) {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 30;
     const search = new RegExp(req.params.search, "i");
     try {
       const clientes = await Cliente.paginate(
         { loja: req.query.loja, nome: { $regex: search } },
-        { offset, limit, populate: "usuario" }
+        { offset, limit, populate: "user" }
       );
       return res.send({ clientes });
     } catch(e){
@@ -80,10 +80,12 @@ class ClienteController {
         cliente.nome = nome;
       }
       if(email) cliente.user.email = email;
+      if(cpf) cliente.user.cpf = cpf;
       if(telefones) cliente.user.telefones = telefones;
       if(endereco) cliente.user.endereco = endereco;
       if(dataDeNascimento) cliente.user.dataDeNascimento = dataDeNascimento;
-      await cliente.user.save()
+      await cliente.user.save();
+      await cliente.save()
       return res.send({ cliente });
     } catch(e) {
       next(e);
@@ -102,7 +104,8 @@ class ClienteController {
   // GET
   async show(req, res, next) {
     try{
-      const cliente = await Cliente.findOne({ user: req.payload.id, loja: req.query.loja }).populare("user");
+      const cliente = await Cliente.findOne({ user: req.payload.id, loja: req.query.loja }).populate("user");
+      return res.send({ cliente })
     } catch(e) {
       next(e);
     }
@@ -115,7 +118,7 @@ class ClienteController {
 
     const user = new User({ nome, email, loja });
     user.setSenha(password);
-    const cliente = new Cliente({ nome, cpf,telefones, loja, dataDeNascimento, user: user._id });
+    const cliente = new Cliente({ nome, cpf, telefones, loja, dataDeNascimento, user: user._id });
 
     try {
       await user.save();
@@ -129,10 +132,10 @@ class ClienteController {
 
   // PUT ATUALIZACAO DE DADOS
   async update(req, res, next) {
-    const { nome, email, cpf, telefones, endereco,dataDeNascimento, password } =  req.body;
+    const { nome, email, cpf, telefones, endereco, dataDeNascimento, password } =  req.body;
     
     try {
-      const cliente = await (await Cliente.findById(req.payload.id)).populated("user");
+      const cliente = await (await Cliente.findById(req.payload.id)).populate("user");
       if(nome) {
         cliente.user.nome = nome;
         cliente.nome = nome;
@@ -143,6 +146,7 @@ class ClienteController {
       if(telefones) cliente.telefones = telefones;
       if(endereco) cliente.endereco = endereco;
       if(dataDeNascimento) cliente.dataDeNascimento = dataDeNascimento;
+      await cliente.user.save();
       await cliente.save();
       return res.send({ cliente });
     } catch(e) {
