@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     lowercase: true,
     unique: true,
+    index: true,
     required: [true, "não pode ficar vazio"],
     index: true,
     match: [/\S+@\S+\.\S+/, "é inválido"]
@@ -39,7 +40,7 @@ const UserSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-UserSchema.plugin(uniqueValidator), { message: "já está sendo utilizado" }
+UserSchema.plugin(uniqueValidator , { message: "já está sendo utilizado" });
 
 UserSchema.methods.setSenha = function(password) {
   this.salt = crypto.randomBytes(16).toString("hex");
