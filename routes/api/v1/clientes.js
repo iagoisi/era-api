@@ -13,7 +13,7 @@ router.get("/", auth.required, LojaValidation.admin, clienteController.index);
 // router.get("/search/:search/pedidos", auth.required, LojaValidation.admin, clienteController.searchPedidos);
 router.get("/search/:search", auth.required, LojaValidation.admin, clienteController.search);
 router.get("/admin/:id", auth.required, LojaValidation.admin, clienteController.showAdmin);
-// router.get("/admin/:id/:pedidos", auth.required, LojaValidation.admin, clienteController.showPedidosClientes);
+// router.get("/admin/:id/pedidos", auth.required, LojaValidation.admin, clienteController.showPedidosClientes);
 
 router.put("/admin/:id", auth.required, LojaValidation.admin, clienteController.updateAdmin);
 
