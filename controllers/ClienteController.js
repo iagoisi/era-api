@@ -80,7 +80,7 @@ class ClienteController {
         cliente.nome = nome;
       }
       if(email) cliente.user.email = email;
-      if(cpf) cliente.user.cpf = cpf;
+      if(cpf) cliente.cpf = cpf;
       if(telefones) cliente.user.telefones = telefones;
       if(endereco) cliente.user.endereco = endereco;
       if(dataDeNascimento) cliente.user.dataDeNascimento = dataDeNascimento;
